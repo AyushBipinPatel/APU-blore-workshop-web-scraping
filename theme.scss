@@ -1,0 +1,31 @@
+/*-- scss:defaults --*/
+
+
+
+/*-- scss:rules --*/
+
+.reveal {
+  .slides {
+    .slide {
+      figcaption {
+        font-size: 0.5em;
+        text-align: center;
+        margin-top: 1px;
+      }
+    }
+  }
+}
+
+.blue{
+  color: #4A49FF;
+  font-weight: bold;
+}
+
+.green{
+  color: #63e76eff;
+  font-weight: bold;
+}
+
+.hilit{
+  background-color: #fcf45f
+}
