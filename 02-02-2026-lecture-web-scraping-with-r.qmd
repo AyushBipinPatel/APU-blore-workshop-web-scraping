@@ -1,0 +1,422 @@
+---
+title: "Web Scraping with R"
+author: "Ayush Patel"
+institute: "At Azim Premji University, Bengaluru"
+date: today
+date-format: "DD MMM, YYYY"
+format: 
+  revealjs:
+    code-annotations: hover
+    fig-height: 6
+    fig-width: 14
+    embed-resources: true
+    margin-left: 50px
+    margin-right: 50px
+    slide-number: c/t
+    width: 1400
+    height: 850
+    theme: [default, theme.scss]
+    footer: "Email: ayush.ap58@gmail.com"
+---
+
+```{r}
+#| include: false
+#| warning: false
+
+library(tidyverse)
+library(rvest)
+```
+
+# Hello
+
+::::{.columns}
+
+:::{.column}
+
+[I am Ayush.]{.fragment fragment-index="1" style="font-size:45px"}
+
+[I am a researcher working at the intersection of data, development and economics.]{.fragment fragment-index="2" style="font-size:25px"}
+
+[I am a [RStudio (Posit) certified tidyverse Instructor.](https://education.rstudio.com/trainers/people/patel+ayush/)]{.fragment fragment-index="3" style="font-size:25px"}
+
+[I am a Researcher at [Oxford Poverty and Human development Initiative (OPHI)](https://ophi.org.uk/), at the University of Oxford.]{.fragment fragment-index="4" style="font-size:25px"}
+
+:::
+
+:::{.column}
+
+![[Hello (Eh bonjour– donc–.) by Charles Motte](https://www.metmuseum.org/art/collection/search/392118"Well)](https://images.metmuseum.org/CRDImages/dp/original/DP808141.jpg){fig-align="center" height=400 .lightbox}
+ 
+
+:::
+
+::::
+
+# Did you come prepared?
+
+::::{.columns}
+
+:::{.column}
+- You have installed R. If not see [this link]().
+
+- You have installed RStudio/Positron/VScode or any other IDE. It is recommended that you work through an IDE
+
+- You have the libraries `{tidyverse}  {rvest}` installed
+
+- You have the latest or a very recent version of chrome browser
+
+:::
+
+:::{.column}
+
+![[Armor (Gusoku) Helmet signed by Bamen Tomotsugu](https://www.metmuseum.org/art/collection/search/24975)](https://images.metmuseum.org/CRDImages/aa/original/DT5333.jpg){fig-align="center" height=400 .lightbox}
+
+
+:::
+
+::::
+
+
+# Learning Goals
+
+> How to scrape informaiton from the web (static and dynamic)
+
+## Why? Just ask AI
+<br><br>
+
+>I asked for you, it said something on the lines of [*well, maybe. But mostly no*](https://chatgpt.com/share/69802425-3b14-8013-a948-45683b98ac33)
+
+# Components you *need* to learn
+
+:::{.incremental}
+
+1. Basic HTML and CSS
+2. Using selector tools to indentify elements on a web page
+3. R (or any other) programming
+
+:::
+
+
+# HTML Essentials for web scraping
+
+## What is HTML?
+<br>
+[Hyper Text Markup Language]{.fragment fragment-index='1'}
+<br><br>
+[A language to create webpages]{.fragment fragment-index='2'}
+<br><br>
+[Used to define **what goes where** on a webpage]{.fragment fragment-index='3'}
+<br><br>
+[Used to define **how stuff looks**]{.fragment fragment-index='4'}
+<br><br>
+[In HTML, almost all **[things]{.blue}** are *[Elements]{.blue}*]{.fragment fragment-index='5'}
+<br><br>
+[In HTML, all [features]{.green} of a *[thing]{.blue}* are called it's [attributes]{.green}]{.fragment fragment-index='6'}
+
+## What does it look like?
+
+```{html}
+#| echo: true
+#| eval: false
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+</head>
+<body>
+
+<h1>My First Heading</h1>
+<p>My first paragraph.</p>
+
+</body>
+</html>
+```
+
+## What does it look like?
+
+```{html}
+#| echo: true
+#| eval: false
+
+<html>
+<head>
+  <title>Page title</title>
+</head>
+<body>
+  <h1 id='first'>A heading</h1>
+  <p>Some text; <b>some bold text.</b></p>
+  <img src='myimg.png' width='100' height='100'>
+</body>
+
+```
+
+# Try Yourself
+
+> Navigate to the [Data-is-Plural](https://www.data-is-plural.com/) blog. Use `F12` in you browser see the HTML for the website. Explore the elements and their attributes in your browser.
+
+# Try Yourself
+
+> Navigate to [CSS Diner](https://flukeout.github.io/) and complete till Level 10
+
+# Early Harvest {rvest} - Introduction
+
+
+![From library rvest](https://rvest.tidyverse.org/logo.png)
+
+## Getting the HTML doc
+<br>
+
+```{r}
+#| echo: true
+
+plural_webpage <- read_html("https://www.data-is-plural.com/") 
+
+class(plural_webpage)
+```
+
+## What does it look like?
+<br>
+
+```{r}
+#| echo: true
+plural_webpage
+```
+
+## A small example
+
+> I wish to create a table for the recent edition of the Data is Plural blog. I want three columns. Date, summary and the link to the archive. 
+
+<br><br>
+Following slides are a walk through on how to achieve this.
+
+## Get all `<time>` elements
+
+```{r}
+#| echo: true
+
+plural_webpage |>
+  html_element("time")
+
+plural_webpage |>
+  html_elements("time") 
+
+plural_webpage |>
+  html_elements("time") |>
+  html_text2()
+```
+
+## Getting all summary using `class`
+
+
+```{r}
+#| echo: true
+
+plural_webpage |>
+  html_elements(".edition-summary") |>
+  html_text2()
+```
+
+## Getting [Attributes]{.green}
+
+```{r}
+#| echo: true
+
+plural_webpage |>
+  html_elements("ul.edition-list a") |>
+  html_attr("href")
+
+```
+
+## Putting it together
+
+```{r}
+#| echo: true
+#| output-location: slide
+
+tibble(
+  date = plural_webpage |>
+  html_elements("time") |>
+  html_text2(),
+  summary = plural_webpage |>
+  html_elements(".edition-summary") |>
+  html_text2(),
+  link = paste0(
+    "https://www.data-is-plural.com/",
+    plural_webpage |>
+  html_elements("ul.edition-list a") |>
+  html_attr("href") |>
+  str_replace(".","")
+      )
+    ) |>
+      kableExtra::kable() |>                                        #<1>
+      kableExtra::kable_styling() |>
+      kableExtra::scroll_box(width = '100%', height = '650px')
+
+```
+
+1. this part of the code is to create a table that can scroll, you can ignore it.
+
+# Your Turn
+
+[[This page](https://website.rbi.org.in/web/rbi/speeches) maintains the speeches at RBI]{.fragment fragment-index='1'}
+<br><br>
+[Get the information of the displayed speeches: date, speaker, displayed content and the link to the pdf in a table]{.fragment fragment-index='2'}
+
+# But how to get all the speeches?
+
+## Notice anything when you navigate to the next page for the speeches?
+<br>
+[https://website.rbi.org.in/web/rbi/speeches?delta=10&start=3]{.fragment fragment-index='1'}
+<br><br>
+[https://website.rbi.org.in/web/rbi/speeches?delta=10&start=4]{.fragment fragment-index='2'}
+<br><br>
+[https://website.rbi.org.in/web/rbi/speeches?delta=10&start=5]{.fragment fragment-index='3'}
+
+# Programming
+<br>
+[**Function**: We need a set of general steps that can apply to all pages of the website]{.fragment fragment-index='1'}
+<br><br>
+[**Reiterate**: Need to apply these steps as many times as needed]{.fragment fragment-index='2'}
+
+## General Steps
+
+<br>
+[Every operation needs a link. A different one]{.fragment fragment-index='1'}
+<br><br>
+[For every page the structure remains the same for listing the detials of interest. We use this idea for making the general steps.]{.fragment fragment-index='2'}
+<br><br>
+[We need the details structured as a table after scraping.]{.fragment fragment-index='3'}
+
+## General Steps - get all links ready
+
+There are 134 pages by default, so we need 134 links
+
+```{r}
+#| echo: true
+
+paste0(
+  "https://website.rbi.org.in/web/rbi/speeches?delta=10&start=",
+  c(1:134)
+) -> link_pages
+
+link_pages |>
+  head()
+```
+
+## General Steps - all operation
+
+Read HTML, Identify elements, extract content, structure as desired
+<br>
+
+```{r}
+#| echo: true
+#| cache: true
+#| output-location: slide
+
+## Read HTML
+
+html_doc <- read_html("https://website.rbi.org.in/web/rbi/speeches?delta=10&start=1")
+
+## Identify, extract and strucutre
+
+
+tibble(
+  date = html_doc |>
+  html_elements(".notification-date") |>
+  html_text2(),
+  short_description = html_doc |>
+  html_elements("span.mtm_list_item_heading") |>
+  html_text2(),
+  speaker = html_doc |>
+  html_elements("div.speaker-content") |>
+  html_text2(),
+  link = paste0(
+   "https://website.rbi.org.in",
+   html_doc |>
+    html_elements("a.matomo_download") |>
+    html_attr("href")
+ 
+  )
+)
+
+
+
+```
+
+## General Steps - set up as a function
+
+
+```{r}
+#| echo: true
+
+get_speech_details <- function(lnk){
+
+## Read HTML
+  html_doc <- read_html(lnk)
+
+## Identify, extract and strucutre
+
+
+tibble(
+  date = html_doc |>
+  html_elements(".notification-date") |>
+  html_text2(),
+  short_description = html_doc |>
+  html_elements("span.mtm_list_item_heading") |>
+  html_text2(),
+  speaker = html_doc |>
+  html_elements("div.speaker-content") |>
+  html_text2(),
+  link = paste0(
+   "https://website.rbi.org.in",
+   html_doc |>
+    html_elements("a.matomo_download") |>
+    html_attr("href")
+    )
+) -> details
+
+## return 
+
+return(details)
+
+}
+```
+
+## The function in use
+
+
+```{r}
+#| echo: true
+#| cache: true
+
+get_speech_details(link_pages[4])
+
+```
+
+## We must Iterate - `purrr::map()`
+
+```{r}
+#| echo: true
+#| cache: true
+
+map(
+  link_pages[1:8],
+  get_speech_details
+) 
+
+
+```
+
+## saftey first - `purrr::map()`
+
+```{r}
+#| echo: true
+#| cache: true
+
+map(
+  link_pages,
+  safely(get_speech_details)
+) 
+
+
+```
