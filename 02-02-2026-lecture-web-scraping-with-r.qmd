@@ -278,6 +278,111 @@ tibble(
 <br><br>
 [**Reiterate**: Need to apply these steps as many times as needed]{.fragment fragment-index='2'}
 
+## Functions - quick review
+
+:::: {.columns}
+::: {.column}
+
+```{r}
+#| echo: true
+#| eval: false
+
+fun_name <- function(arg, arg2){
+
+  # operations on or using args
+
+  ----
+    ----
+    ----
+
+  # output the desired object
+
+  return(out)
+
+}
+
+fun_name(arg=4,arg2="A")
+```
+
+:::
+::: {.column}
+
+```{r}
+#| echo: true
+
+fun_get_divisibilty_by_2 <- function(val){
+
+  if(length(val)>1 | !is.numeric(val)){
+    out <- "Please enter only one number or a numeric"
+  }else{
+    out <- ifelse(val %% 2 == 0, "Is divisible by 2",
+    "NOt divisible by 2")
+  }
+
+  return(out)
+
+}
+
+fun_get_divisibilty_by_2(345)
+
+fun_get_divisibilty_by_2(letters)
+```
+
+:::
+::::
+<!-- end columns -->
+
+## Iterate - quick review
+
+```{r}
+#| echo: true
+rnorm(n = 10,mean = 5,sd = 8)
+```
+
+## Iterate - quick review
+
+```{r}
+#| echo: true
+
+map(
+  c(1:100),
+  ~rnorm(n = 10,mean = 5,sd = 8)
+)
+
+```
+
+## Iterate - quick review
+
+```{r}
+#| echo: true
+
+pmap(
+  list(
+    n = c(5,10,12),
+    mean = c(-100,100,0),
+    sd = c(1,5,10)
+  ),
+  rnorm
+)
+
+```
+
+## Iterate - quick review
+
+```{r}
+#| echo: true
+
+pmap(
+  list(
+    n = list(5,10,12),
+    mean = list(-100,100,0),
+    sd = list(1,5,'10')
+  ),
+  safely(rnorm)
+)
+
+```
+
 ## General Steps
 
 <br>
