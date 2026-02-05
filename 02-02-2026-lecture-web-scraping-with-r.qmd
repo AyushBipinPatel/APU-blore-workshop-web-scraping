@@ -525,3 +525,8 @@ map(
 
 
 ```
+
+# Your Turn
+
+> Navigate to the [People](https://azimpremjiuniversity.edu.in/people) page of APU website. Scrape the name, location, interests and contact for every individual.
+
