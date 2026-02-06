@@ -635,6 +635,20 @@ read_html("https://prsindia.org/parliament-committees")|>
 <br><br>
 [In such cases we may need to rely on headless browsing to scrape desired data]{.fragment fragment-index='3'}
 
+# Demo
+
+<br>
+
+> Somethings need to be seen
+
+# Your turn
+
+# Readings and resources
+
+1. [Chapter 24 R4DS](https://r4ds.hadley.nz/webscraping.html)
+2. [Rvest Documentaiotn](https://rvest.tidyverse.org/articles/rvest.html)
+3. [Selenidir Documentation](https://ashbythorpe.github.io/selenider/articles/selenider.html)
+4. [Web Scraping with R](https://steviep42.github.io/webscraping/book/)
 
 
 
