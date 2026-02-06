@@ -643,6 +643,12 @@ read_html("https://prsindia.org/parliament-committees")|>
 
 # Your turn
 
+# Important stuff I left out
+
+1. Parallel Processing. [see1](https://www.oreilly.com/library/view/parallel-r/9781449317850/), [see2](https://tidyverse.org/blog/2025/07/purrr-1-1-0-parallel/), [see3](https://purrr.tidyverse.org/reference/in_parallel.html)
+2. Ethical Scraping. [see](https://dmi3kno.github.io/polite/)
+
+
 # Readings and resources
 
 1. [Chapter 24 R4DS](https://r4ds.hadley.nz/webscraping.html)
