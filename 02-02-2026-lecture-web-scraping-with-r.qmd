@@ -332,6 +332,12 @@ fun_get_divisibilty_by_2(letters)
 ::::
 <!-- end columns -->
 
+## Do it yourself
+
+<br><br>
+
+> Given a birthdate, write a function to compute the age in years. Stick to a format.
+
 ## Iterate - quick review
 
 ```{r}
@@ -382,6 +388,12 @@ pmap(
 )
 
 ```
+
+## Do it yourself
+
+<br><br>
+
+> Use `map` to calculate age in years for a vector of birthdates using the funciton you made.
 
 ## General Steps
 
@@ -529,4 +541,40 @@ map(
 # Your Turn
 
 > Navigate to the [People](https://azimpremjiuniversity.edu.in/people) page of APU website. Scrape the name, location, interests and contact for every individual.
+
+## Getting tables
+
+> Get the table from [link](https://prsindia.org/parliament-committees)
+
+## Getting tables
+
+```{r}
+#| echo: true
+
+read_html("https://prsindia.org/parliament-committees")|>
+  html_element("table") |> 
+  html_table(header = T)
+```
+
+## Using Xpath
+
+```{r}
+#| echo: true
+
+read_html("https://prsindia.org/parliament-committees")|>
+  html_element(xpath = '//*[@id="block-system-main"]/div/div/div/div/table') |> 
+  html_table(header = T)
+```
+
+
+# Scraping Dynamic Webpages
+
+[Unlike the previous exercises, dynamic webpages, or parts of such webpages, are generated through JS.]{.fragment fragment-index='1'}
+<br><br>
+[So, the links do not change with content of the webpage.]{.fragment fragment-index='2'}
+<br><br>
+[In such cases we may need to rely on headless browsing to scrape desired data]{.fragment fragment-index='3'}
+
+
+
 
