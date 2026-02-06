@@ -542,6 +542,66 @@ map(
 
 > Navigate to the [People](https://azimpremjiuniversity.edu.in/people) page of APU website. Scrape the name, location, interests and contact for every individual.
 
+## some hints on the task at hand
+
+:::: {.columns}
+::: {.column}
+
+```{r}
+#| echo: true
+
+read_html("https://azimpremjiuniversity.edu.in/people") |> 
+  html_elements("h3.title-h4.mb-0 a") |>
+  html_text2()
+```
+
+:::
+::: {.column}
+
+```{r}
+#| echo: true
+
+read_html("https://azimpremjiuniversity.edu.in/people") |> 
+  html_elements("h3.title-h4.mb-0") |> 
+  html_element("a") |> 
+  html_text2()
+
+```
+
+:::
+::::
+<!-- end columns -->
+
+## Some hints on the task at hand
+
+:::: {.columns}
+::: {.column}
+
+```{r}
+#| echo: true
+
+read_html("https://azimpremjiuniversity.edu.in/people") |> 
+  html_elements('h4.font-medium + p') |>  
+  html_text2()
+
+```
+
+:::
+::: {.column}
+
+```{r}
+#| echo: true
+
+read_html("https://azimpremjiuniversity.edu.in/people") |> 
+  html_elements('[class="sm:w-4/12 sm:pl-4 mb-4 sm:mb-0 text-sm"]') |> html_element("p") |> 
+  html_text2()
+
+```
+
+:::
+:::
+<!-- end columns -->
+
 ## Getting tables
 
 > Get the table from [link](https://prsindia.org/parliament-committees)
